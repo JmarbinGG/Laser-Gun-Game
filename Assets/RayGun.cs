@@ -11,6 +11,7 @@ public class RayGun : MonoBehaviour
     public GameObject rotationPoint;
     public float magazine = 20f;
     float lasersLeft;
+    public UIManager uimanager;
 
     RaycastHit hit;
     float range = 1000.0f;
@@ -45,10 +46,12 @@ public class RayGun : MonoBehaviour
             GameObject.Destroy(laser, 2f);
 
             lasersLeft--;
+            uimanager.UpdateAmmoDisplay(lasersLeft, magazine);
             if(lasersLeft == 0)
             {
                 anim.Play("Reloadinge");
                 lasersLeft = magazine;
+                uimanager.UpdateAmmoDisplay(lasersLeft, magazine);
             }
         }
 
