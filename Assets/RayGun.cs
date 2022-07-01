@@ -12,6 +12,8 @@ public class RayGun : MonoBehaviour
     public float magazine = 20f;
     float lasersLeft;
     public UIManager uimanager;
+   public AudioSource source;
+    
 
     RaycastHit hit;
     float range = 1000.0f;
@@ -20,6 +22,7 @@ public class RayGun : MonoBehaviour
     {
         lasersLeft = magazine;
         anim = rotationPoint.GetComponent<Animation>();
+
     }
 
     void Update()
@@ -41,6 +44,7 @@ public class RayGun : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, range) && lasersLeft > 0)
         {
+            source.Play();
             GameObject laser = GameObject.Instantiate(m_shotPrefab, muzzle.transform.position, muzzle.transform.rotation) as GameObject;
             laser.GetComponent<ShotBehavior>().setTarget(hit.point);
             GameObject.Destroy(laser, 2f);
@@ -52,6 +56,11 @@ public class RayGun : MonoBehaviour
                 anim.Play("Reloadinge");
                 lasersLeft = magazine;
                 uimanager.UpdateAmmoDisplay(lasersLeft, magazine);
+            }
+            EnemyController enemy = hit.transform.GetComponent<EnemyController>();
+            if(enemy != null)
+            {
+                enemy.die();
             }
         }
 
